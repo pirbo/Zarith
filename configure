@@ -21,13 +21,9 @@ ocamllibdir='auto'
 host='auto'
 gmp='auto'
 perf='no'
+ocamlfind="auto"
 
 ar='ar'
-ocamlc='ocamlc'
-ocamlopt='ocamlopt'
-ocamlmklib='ocamlmklib'
-ocamldep='ocamldep'
-ocamldoc='ocamldoc'
 ccinc="$CPPFLAGS"
 cclib="$LDFLAGS"
 asopt="$ASFLAGS"
@@ -36,7 +32,6 @@ mlflags="$OCAMLFLAGS"
 mloptflags="$OCAMLOPTFLAGS"
 mlinc="$OCAMLINC"
 objsuffix="o"
-ocamlfind="auto"
 
 # sanitize
 LC_ALL=C
@@ -199,16 +194,35 @@ checkcmxalib()
     return $r
 }
 
-
 # check required programs
+searchbin ocamlfind
+if test $? -eq 1 -a $ocamlfind != "no"; then
+    ocamlfind="yes"
+else
+    ocamlfind="no"
+fi
 
-searchbinreq $ocamlc
-searchbinreq $ocamldep
-searchbinreq $ocamlmklib
-searchbinreq $ocamldoc
 searchbin $ar
 if test $? -eq 0; then ar=$prefixnonocaml$ar; searchbinreq $ar; fi
 searchbinreq perl
+
+if test $ocamlfind = "yes"; then
+    ocamlc='ocamlfind ocamlc'
+    ocamlopt='ocamlfind opt'
+    ocamlmklib='ocamlfind ocamlmklib'
+    ocamldep='ocamlfind ocamldep'
+    ocamldoc='ocamlfind ocamldoc'
+else
+    ocamlc='ocamlc'
+    searchbinreq $ocamlc
+    ocamlopt='ocamlopt'
+    ocamlmklib='ocamlmklib'
+    searchbinreq $ocamlmklib
+    ocamldep='ocamldep'
+    searchbinreq $ocamldep
+    ocamldoc='ocamldoc'
+    searchbinreq $ocamldoc
+fi
 
 # This is used by the builtin makefile rule that makes a .o from a .S
 cc=$($ocamlc -config | grep ^c_compiler: | cut -d' ' -f 2)
@@ -216,9 +230,7 @@ cc=$($ocamlc -config | grep ^c_compiler: | cut -d' ' -f 2)
 # optional native-code generation
 
 hasocamlopt='no'
-
-searchbin $ocamlopt
-if test $? -eq 1; then hasocamlopt='yes'; fi
+if $ocamlopt >/dev/null 2>&1; then hasocamlopt='yes'; fi
 
 
 # check C compiler
@@ -257,8 +269,7 @@ fi
 
 # installation method
 
-searchbin ocamlfind
-if test $? -eq 1 -a $ocamlfind != "no"; then 
+if test $ocamlfind = "yes"; then
     instmeth='findlib'
     if test "$installdir" = "auto"
     then installdir=`ocamlfind printconf destdir`; fi
