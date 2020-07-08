@@ -254,7 +254,7 @@ fi
 # directories
 
 if test "$ocamllibdir" = "auto"
-then ocamllibdir=`ocamlc -where | sed 's/\r$//'`
+then ocamllibdir=`$ocamlc -where | sed 's/\r$//'`
 fi
 
 if test ! -f "$ocamllibdir/caml/mlvalues.h"
@@ -293,7 +293,7 @@ fi
 # detect OCaml's word-size
 
 echo "print_int (Sys.word_size);;" > tmp.ml
-wordsize=`ocaml tmp.ml`
+wordsize=`$ocaml tmp.ml`
 echo "OCaml's word size is $wordsize"
 rm -f tmp.ml
 
@@ -392,7 +392,7 @@ if test "$gmp" != 'OK'; then echo "cannot find GMP nor MPIR"; exit 2; fi
 
 # OCaml version
 
-ocamlver=`ocamlc -version`
+ocamlver=`$ocamlc -version`
 
 # Extended comparisons available since 3.12.1
 case "$ocamlver" in
