@@ -23,7 +23,6 @@ gmp='auto'
 perf='no'
 ocamlfind="auto"
 
-ar='ar'
 ccinc="$CPPFLAGS"
 cclib="$LDFLAGS"
 asopt="$ASFLAGS"
@@ -202,8 +201,6 @@ else
     ocamlfind="no"
 fi
 
-searchbin $ar
-if test $? -eq 0; then ar=$prefixnonocaml$ar; searchbinreq $ar; fi
 searchbinreq perl
 
 if test $ocamlfind = "yes"; then
@@ -441,7 +438,6 @@ ASFLAGS=$ccdef $asopt
 LIBS=$cclib
 ARCH=$arch
 INSTALLDIR=$installdir
-AR=$ar
 INSTALL=install
 OCAMLFIND=ocamlfind
 INSTMETH=$instmeth
