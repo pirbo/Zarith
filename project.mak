@@ -49,8 +49,8 @@ ifeq ($(HASOCAMLOPT),yes)
 TOINSTALL += zarith.$(LIBSUFFIX) zarith.cmxa $(CMXOBJ)
 endif
 
-OCAMLFLAGS = -I +compiler-libs
-OCAMLOPTFLAGS = -I +compiler-libs
+OCAMLFLAGS += -I +compiler-libs
+OCAMLOPTFLAGS += -I +compiler-libs
 
 ifeq ($(HASDYNLINK),yes)
 TOINSTALL += zarith.cmxs
