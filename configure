@@ -62,7 +62,6 @@ where options include:
   -prefixnonocaml      add for non ocaml tool, e.g. -prefixnonocaml x86_64-w64-mingw32-
 
 Environment variables that affect configuration:
-  CC                   C compiler to use (default: try gcc, then cc)
   CFLAGS               extra flags to pass to the C compiler
   ASFLAGS              extra flags to pass to the assembler
   CPPFLAGS             extra includes, e.g. -I/path/to/gmp/include
@@ -213,24 +212,8 @@ searchbin $ar
 if test $? -eq 0; then ar=$prefixnonocaml$ar; searchbinreq $ar; fi
 searchbinreq perl
 
-if test -n "$CC"; then
-  searchbinreq "$CC"
-  cc="$CC"
-  ccopt="$CFLAGS"
-elif ! searchbin 'gcc'; then
-  cc='gcc'
-  ccopt="-O3 -Wall -Wextra $CFLAGS"
-elif ! searchbin $prefixnonocaml'gcc'; then
-  cc=$prefixnonocaml'gcc'
-  ccopt="-O3 -Wall -Wextra $CFLAGS"
-elif ! searchbin 'cc'; then
-  cc='cc'
-  ccopt="-O3 -Wall -Wextra $CFLAGS"
-else
-  searchbinreq $prefixnonocaml'cc'
-  cc=$prefixnonocaml'cc'
-  ccopt="-O3 -Wall -Wextra $CFLAGS"
-fi
+# This is used by the builtin makefile rule that makes a .o from a .S
+cc=$($ocamlc -config | grep ^c_compiler: | cut -d' ' -f 2)
 
 # optional native-code generation
 
