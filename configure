@@ -23,7 +23,6 @@ gmp='auto'
 perf='no'
 
 ar='ar'
-ocaml='ocaml'
 ocamlc='ocamlc'
 ocamlopt='ocamlopt'
 ocamlmklib='ocamlmklib'
@@ -203,7 +202,6 @@ checkcmxalib()
 
 # check required programs
 
-searchbinreq $ocaml
 searchbinreq $ocamlc
 searchbinreq $ocamldep
 searchbinreq $ocamlmklib
@@ -274,10 +272,8 @@ fi
 
 # detect OCaml's word-size
 
-echo "print_int (Sys.word_size);;" > tmp.ml
-wordsize=`$ocaml tmp.ml`
+wordsize=$($ocamlc -config | grep ^word_size: | cut -d' ' -f 2)
 echo "OCaml's word size is $wordsize"
-rm -f tmp.ml
 
 
 # auto-detect host
