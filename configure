@@ -52,7 +52,6 @@ where options include:
   -gmp                 use GMP library (default if found)
   -mpir                use MPIR library instead of GMP
   -perf                enable performance statistics
-  -prefixnonocaml      add for non ocaml tool, e.g. -prefixnonocaml x86_64-w64-mingw32-
 
 Environment variables that affect configuration:
   CFLAGS               extra flags to pass to the C compiler
@@ -93,9 +92,6 @@ while : ; do
             gmp='mpir';;
         -perf|--perf)
             perf='yes';;
-        -prefixnonocaml|--prefixnonocaml)
-            prefixnonocaml="$2"
-            shift;;
         *)
             echo "unknown option $1, try -help"
             exit 2;;
